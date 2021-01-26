@@ -5,11 +5,10 @@ import argparse
 
 
 def connection():
-    global con, cursor
+    global con
     con = psycopg2.connect(database="aland", user="azubi",
                            password="a1t1AZUBI", host="localhost", port="5432")
     print("Database opened successfully", end='\n\n')
-    cursor = con.cursor()
 
 
 connection()
@@ -35,8 +34,9 @@ interactive()
 
 
 def here_the_results():
-    global row
+    global row, cursor
     print("Here the results:")
+    cursor = con.cursor()
     cursor.execute(query)
     row = cursor.fetchone()
     while (row != None):
@@ -49,7 +49,7 @@ here_the_results()
 # export to csv without header
 
 
-def save():
+def save_ohne_header():
     answer = input("Do you want to save the results in csv document? y/n: ")
     if answer == "y":
         cursor.execute(query)
@@ -63,21 +63,21 @@ def save():
         print("Ok, they are not saved. Bye!")
 
 
-save()
+save_ohne_header()
 
 # export to csv with header
 
 
-def with_header():
+def save_with_header():
     annoing = input("Maybe with header? y/n: ")
     if annoing == "y":
         sql_query = pd.read_sql_query(query, con)
         df = pd.DataFrame(sql_query)
         # place 'r' before the path name to avoid any errors in the path
-        df.to_csv(r'interactive' + parameter + '.csv', index=False)
+        df.to_csv(r'with-header-' + parameter + '.csv', index=False)
         print("A csv document with header successfully created")
     else:
         print("Ok, ok. Buy!")
 
 
-with_header()
+save_with_header()
