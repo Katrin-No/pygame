@@ -13,23 +13,6 @@ def connection():
 
 connection()
 
-
-def interactive():
-    global parameter, query
-    parameter = input(
-        "Type:\n - name of continent or \n - first letter of land (A-D) or \n - 'all' for the hole table\n: ")
-    print()
-    if len(parameter) < 3:
-        query = "SELECT * FROM land WHERE name LIKE \'" + parameter + "%\'"
-    elif len(parameter) == 3:
-        query = "SELECT * FROM land"
-    else:
-        query = "SELECT * FROM land WHERE kontinent = \'" + parameter + "\'"
-    print("Query is: " + query)
-
-
-interactive()
-
 # Durchlaufen der Ergebnisse
 
 
@@ -43,8 +26,6 @@ def here_the_results():
         print(row)
         row = cursor.fetchone()
 
-
-here_the_results()
 
 # export to csv without header
 
@@ -63,8 +44,6 @@ def save_ohne_header():
         print("Ok, they are not saved. Bye!")
 
 
-save_ohne_header()
-
 # export to csv with header
 
 
@@ -80,4 +59,27 @@ def save_with_header():
         print("Ok, ok. Buy!")
 
 
-save_with_header()
+def ask_parameter():
+    global parameter, query
+    parameters = ["A", "B", "C", "D", "all", "Europa",
+                  "Asien", "Afrika", "Nordamerika", "Südamerika", "Australien"]
+    parameter = input(
+        "Type:\n - name of continent or \n - first letter of land (A-D) or \n - 'all' for the hole table\n: ")
+    print()
+    if parameter in parameters:
+        if len(parameter) < 3:
+            query = "SELECT * FROM land WHERE name LIKE \'" + parameter + "%\'"
+        elif len(parameter) == 3:
+            query = "SELECT * FROM land"
+        else:
+            query = "SELECT * FROM land WHERE kontinent = \'" + parameter + "\'"
+        print("Query is: " + query)
+        here_the_results()
+        save_ohne_header()
+        save_with_header()
+
+    else:
+        print("Sorry, this parameter is wrong")
+
+
+ask_parameter()
